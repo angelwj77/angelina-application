@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angelina Arun George — Student-Athlete Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --court-maroon:#7A1B26;
+    --court-maroon-dark:#571219;
+    --paper:#F6F1E7;
+    --paper-warm:#EFE7D6;
+    --ink:#221D1B;
+    --ink-soft:#5A5049;
+    --gold:#C99A3E;
+    --hardwood:#B98A54;
+    --line:rgba(34,29,27,0.14);
+    --win:#7A1B26;
+    --ru:#8C7A52;
+    --pos:#5A5049;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Fraunces', serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- toolbar ---------- */
+  .toolbar{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; flex-wrap:wrap;
+    padding:10px 20px;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.04em;
+  }
+  .toolbar span.hint{opacity:.75}
+  .toolbar .actions{display:flex; gap:8px;}
+  .toolbar button{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    background:transparent;
+    color:var(--paper);
+    border:1px solid rgba(246,241,231,.4);
+    padding:7px 12px;
+    border-radius:2px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .toolbar button:hover{background:var(--paper); color:var(--ink);}
+  .toolbar button.primary{background:var(--gold); border-color:var(--gold); color:var(--ink);}
+  .toolbar button.primary:hover{background:#e0b354;}
+  @media print{ .toolbar{display:none;} }
+
+  [contenteditable="true"]{
+    outline:none;
+    border-radius:2px;
+    transition:background .15s ease;
+  }
+  .edit-on [contenteditable="true"]:hover{
+    background:rgba(201,154,62,0.16);
+    box-shadow:0 0 0 2px rgba(201,154,62,0.35);
+  }
+  .edit-on [contenteditable="true"]:focus{
+    background:rgba(201,154,62,0.22);
+    box-shadow:0 0 0 2px var(--gold);
+  }
+
+  /* ---------- hero / scoreboard ---------- */
+  .hero{
+    position:relative;
+    background:var(--court-maroon);
+    color:var(--paper);
+    padding:64px 24px 40px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(115deg, rgba(246,241,231,0.04) 0 2px, transparent 2px 34px);
+    pointer-events:none;
+  }
+  .hero-inner{max-width:920px; margin:0 auto; position:relative;}
+  .eyebrow-row{
+    display:flex; align-items:center; gap:14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:18px;
+  }
+  .eyebrow-row .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+  .badge{
+    width:76px; height:76px; border-radius:50%;
+    border:2px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Anton', sans-serif;
+    font-size:22px;
+    color:var(--gold);
+    flex-shrink:0;
+    background:rgba(0,0,0,.12);
+  }
+  .name-row{display:flex; align-items:flex-end; gap:22px; flex-wrap:wrap;}
+  h1.name{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    font-size:clamp(40px, 8vw, 84px);
+    line-height:.92;
+    letter-spacing:.01em;
+    text-transform:uppercase;
+    margin:0;
+  }
+  .tagline{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:18px;
+    color:var(--paper-warm);
+    margin:10px 0 30px;
+    max-width:60ch;
+  }
+
+  .scoreboard{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(110px, 1fr));
+    gap:1px;
+    background:rgba(246,241,231,0.22);
+    border:1px solid rgba(246,241,231,0.22);
+    margin-top:8px;
+  }
+  .stat{
+    background:var(--court-maroon-dark);
+    padding:16px 14px;
+    text-align:left;
+  }
+  .stat .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--gold);
+    display:block; margin-bottom:6px;
+  }
+  .stat .value{
+    font-family:'Anton', sans-serif;
+    font-size:26px;
+    line-height:1;
+  }
+  .stat .value small{font-family:'IBM Plex Mono', monospace; font-size:12px; margin-left:2px;}
+
+  .contact-strip{
+    margin-top:22px;
+    display:flex; flex-wrap:wrap; gap:6px 22px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--paper-warm);
+  }
+  .contact-strip .item span.k{color:var(--gold); margin-right:6px;}
+
+  /* ---------- sections ---------- */
+  main{max-width:920px; margin:0 auto; padding:0 24px;}
+  section{padding:52px 0; border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .section-head{
+    display:flex; align-items:baseline; gap:16px;
+    margin-bottom:26px;
+  }
+  .section-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; color:var(--gold); letter-spacing:.1em;
+  }
+  h2{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+    font-size:clamp(24px,4vw,32px);
+    margin:0;
+    color:var(--court-maroon);
+  }
+
+  /* summary */
+  .summary-grid{display:grid; grid-template-columns:1fr; gap:26px;}
+  .summary-lede{
+    font-size:22px;
+    line-height:1.5;
+    font-weight:500;
+    color:var(--ink);
+  }
+  .summary-lede em{color:var(--court-maroon); font-style:italic;}
+  .summary-body{font-size:16px; line-height:1.7; color:var(--ink-soft); max-width:68ch;}
+
+  /* timeline / schedule board */
+  .timeline{list-style:none; margin:0; padding:0; border-top:1px solid var(--line);}
+  .tl-row{
+    display:grid;
+    grid-template-columns:110px 1fr auto;
+    gap:16px;
+    align-items:center;
+    padding:16px 4px;
+    border-bottom:1px solid var(--line);
+  }
+  .tl-row:hover{background:rgba(122,27,38,0.04);}
+  .tl-date{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:.04em;
+    color:var(--ink-soft);
+  }
+  .tl-event .name{font-size:16px; font-weight:600; color:var(--ink);}
+  .tl-event .place{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; color:var(--ink-soft); margin-top:2px; display:block;
+  }
+  .chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+    padding:5px 10px;
+    border-radius:2px;
+    white-space:nowrap;
+    color:var(--paper);
+  }
+  .chip.win{background:var(--win);}
+  .chip.ru{background:var(--ru);}
+  .chip.pos{background:var(--pos);}
+
+  /* education */
+  .edu-item{margin-bottom:24px;}
+  .edu-item:last-child{margin-bottom:0;}
+  .edu-top{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap;}
+  .edu-school{font-size:19px; font-weight:600;}
+  .edu-years{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--gold); background:var(--court-maroon); padding:3px 9px; border-radius:2px;}
+  .edu-item ul{margin:8px 0 0; padding-left:20px; color:var(--ink-soft); font-size:15px; line-height:1.6;}
+
+  /* languages + refs */
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
+  @media (max-width:640px){ .two-col{grid-template-columns:1fr;} .tl-row{grid-template-columns:80px 1fr; row-gap:6px;} .tl-row .chip{grid-column:2;} }
+  .lang-list{list-style:none; margin:0; padding:0;}
+  .lang-list li{
+    display:flex; justify-content:space-between;
+    padding:10px 0; border-bottom:1px solid var(--line);
+    font-size:15px;
+  }
+  .lang-list li .level{font-family:'IBM Plex Mono', monospace; font-size:11px; text-transform:uppercase; color:var(--ink-soft);}
+  .ref-card{border:1px solid var(--line); padding:16px 18px; background:var(--paper-warm);}
+  .ref-card .who{font-weight:600; font-size:16px;}
+  .ref-card .role{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); text-transform:uppercase; margin-bottom:8px; display:block;}
+  .ref-card .contact{font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--court-maroon); line-height:1.7;}
+
+  .gallery-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:20px;}
+  .gallery-item{margin:0; border:1px solid var(--line); background:var(--paper-warm); overflow:hidden;}
+  .gallery-item img{width:100%; height:220px; object-fit:cover; display:block;}
+  .gallery-item figcaption{display:none;}
+  .gallery-placeholder{
+    border:1px dashed var(--hardwood);
+    min-height:220px;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:20px;
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft);
+    background:rgba(185,138,84,0.06);
+  }
+  .video-link{display:block; text-decoration:none; color:inherit; cursor:pointer;}
+  .video-thumb{
+    height:220px;
+    background:var(--court-maroon);
+    color:var(--paper);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace; font-size:14px; letter-spacing:.06em;
+    text-transform:uppercase;
+    transition:background .15s ease;
+  }
+  .video-link:hover .video-thumb{background:var(--court-maroon-dark);}
+
+  footer{
+    padding:30px 24px 60px;
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+
+  @media print{
+    .hero{background:var(--court-maroon) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    section{break-inside:avoid;}
+  }
+</style>
+</head>
+<body class="edit-on">
+
+<div class="toolbar">
+  <span class="hint">✎ Click any text on the page to edit it directly — this whole page is live.</span>
+  <div class="actions">
+    <button onclick="toggleEdit()">Toggle edit mode</button>
+    <button onclick="window.print()">Print / Save PDF</button>
+    <button class="primary" onclick="downloadCopy()">Save my edited copy</button>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow-row"><span class="dot"></span><span contenteditable="true">College Application Profile — Class of 2027</span></div>
+    <div class="name-row">
+      <div class="badge" style="background-image:url('bkk-portrait-closeup.webp'); background-size:cover; background-position:center 20%; border-width:3px;"></div>
+      <h1 class="name" contenteditable="true">Angelina<br>Arun George</h1>
+    </div>
+    <p class="tagline" contenteditable="true">Student-athlete from Corvuss American Academy — national and international basketball competitor, School President, and aspiring Arts &amp; Design major.</p>
+
+    <div class="scoreboard">
+      <div class="stat"><span class="label">Sport</span><span class="value" contenteditable="true" style="font-size:18px">BASKETBALL</span></div>
+      <div class="stat"><span class="label">Height</span><span class="value" contenteditable="true">184<small>cm</small></span></div>
+      <div class="stat"><span class="label">Weight</span><span class="value" contenteditable="true">65<small>kg</small></span></div>
+      <div class="stat"><span class="label">DOB</span><span class="value" contenteditable="true" style="font-size:18px">17.03.09</span></div>
+      <div class="stat"><span class="label">Nationality</span><span class="value" contenteditable="true" style="font-size:18px">INDIAN</span></div>
+      <div class="stat"><span class="label">Podium Finishes</span><span class="value" contenteditable="true">10</span></div>
+    </div>
+
+    <div class="contact-strip">
+      <span class="item"><span class="k">Official</span><span contenteditable="true">angelina.george@corvuss.in</span></span>
+      <span class="item"><span class="k">Personal</span><span contenteditable="true">aagwj.77@gmail.com</span></span>
+      <span class="item"><span class="k">Phone</span><span contenteditable="true">+91 8015088560</span></span>
+      <span class="item"><span class="k">Phone</span><span contenteditable="true">+91 9445272560</span></span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section id="summary">
+    <div class="section-head"><span class="section-num">01</span><h2>Profile</h2></div>
+    <div class="summary-grid">
+      <p class="summary-lede" contenteditable="true">Motivated and disciplined, on the <em>Principal's List</em> for academic excellence, currently serving as <em>School President</em> at Corvuss American Academy.</p>
+      <p class="summary-body" contenteditable="true">Exhibits strong leadership, teamwork, and communication abilities, with proven adaptability to evolving coaching methodologies and team environments. Represented Team India internationally at the FIBA U-18 Women's Asia Cup (Bangkok, 2026) and the SABA Qualifiers (Colombo, 2026). Aiming to secure a basketball scholarship and pursue undergraduate studies with a major in Arts and Design — fostering a balance between athletic excellence and creative development.</p>
+    </div>
+  </section>
+
+  <section id="achievements">
+    <div class="section-head"><span class="section-num">02</span><h2>Competition Record</h2></div>
+    <ul class="timeline">
+      <li class="tl-row">
+        <span class="tl-date" contenteditable="true">Nov 2022</span>
+        <span class="tl-event"><span class="name" contenteditable="true">47th Sub-junior National Championship</span><span class="place" contenteditable="true">Himachal Pradesh</span></span>
+        <span class="chip ru" contenteditable="true">Runner Up</span>
+      </li>
+      <li class="tl-row">
+        <span class="tl-date" contenteditable="true">Oct 2024</span>
+        <span class="tl-event"><span class="name" contenteditable="true">U-19 ISSO National Games</span><span class="place" contenteditable="true">Hyderabad</span></span>
+        <span class="chip win" contenteditable="true">Winners</span>
+      </li>
+      <li class="tl-row">
+        <span class="tl-date" contenteditable="true">Oct 2024</span>
+        <span class="tl-event"><span class="name" contenteditable="true">U-17 ISSO National Games</span><span class="place" contenteditable="true">Hyderabad</span></span>
+        <span class="chip win" contenteditable="true">Winners</span>
+      </li>
+      <li class="tl-row">
+        <span class="tl-date" contenteditable="true">Dec 2024</span>
+        <span class="tl-event"><span class="name" contenteditable="true">39th Youth National Championship</span><span class="place" contenteditable="true">Kolkatta</span></span>
+        <span class="chip ru" contenteditable="true">Runner Up</span>
+      </li>
+      <li class="tl-row">
+        <span class="tl-date" contenteditable="true">Jan 2025</span>
+        <span class="tl-event"><span class="name" contenteditable="true">68th School Games Federation of India (SGFI) Nationals</span><span class="place" contenteditable="true">Chennai</span></span>
+        <span class="chip pos" contenteditable="true">4th Position</span>
+      </li>
+      <li class="tl-row">
+        <span class="tl-date" contenteditable="true">Apr 2025</span>
+        <span class="tl-event"><span class="name" contenteditable="true">40th Youth National Championship</span><span class="place" contenteditable="true">Pondicherry</span></span>
+        <span class="chip ru" contenteditable="true">2nd Runner Up</span>
+      </li>
+      <li class="tl-row">
+        <span class="tl-date" contenteditable="true">Jun 2025</span>
+        <span class="tl-event"><span class="name" contenteditable="true">FIBA U-16 Asian Championship SABA Qualifiers</span><span class="place" contenteditable="true">Maldives</span></span>
+        <span class="chip win" contenteditable="true">Winners</span>
+      </li>
+      <li class="tl-row">
+        <span class="tl-date" contenteditable="true">Sept 2025</span>
+        <span class="tl-event"><span class="name" contenteditable="true">FIBA U-16 Asian Championship</span><span class="place" contenteditable="true">Malaysia</span></span>
+        <span class="chip win" contenteditable="true">Winners</span>
+      </li>
+      <li class="tl-row">
+        <span class="tl-date" contenteditable="true">May 2026</span>
+        <span class="tl-event"><span class="name" contenteditable="true">FIBA U-18 Women's Asia Cup — SABA Qualifiers</span><span class="place" contenteditable="true">Sugathadasa Stadium, Colombo, Sri Lanka</span></span>
+        <span class="chip win" contenteditable="true">Winners</span>
+      </li>
+      <li class="tl-row">
+        <span class="tl-date" contenteditable="true">Jul 2026</span>
+        <span class="tl-event"><span class="name" contenteditable="true">FIBA U-18 Women's Asia Cup, Division B — represented Team India</span><span class="place" contenteditable="true">Nimibutr Stadium, Bangkok, Thailand</span></span>
+        <span class="chip pos" contenteditable="true">4th Position</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="gallery">
+    <div class="section-head"><span class="section-num">03</span><h2>Photos &amp; Highlights</h2></div>
+    <div class="gallery-grid">
+      <figure class="gallery-item">
+        <img src="saba-qualifiers-team.png" alt="Team India celebrating qualification at the SABA Qualifiers, Colombo">
+        <figcaption contenteditable="true">Team India after winning the SABA Qualifiers in Colombo, Sri Lanka — May 2026, qualifying for the FIBA U-18 Asia Cup.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="saba-champions-trophy.jpg" alt="Team India lifting the SABA Qualifiers trophy">
+        <figcaption contenteditable="true">Team India lifting the trophy — SABA Qualifiers champions, Colombo.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="saba-action-shot.jpg" alt="Angelina driving past a defender at the SABA Qualifiers">
+        <figcaption contenteditable="true">In action at the SABA Qualifiers, Colombo.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="saba-anthem-lineup.jpg" alt="Team India lined up for the national anthem at the SABA Qualifiers">
+        <figcaption contenteditable="true">Team India lined up for the national anthem, SABA Qualifiers, Colombo.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="bkk-layup-action.webp" alt="Angelina shooting a layup for India at the FIBA U-18 Asia Cup">
+        <figcaption contenteditable="true">Driving to the basket for India — FIBA U-18 Women's Asia Cup, Bangkok, July 2026.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="bkk-contested-shot.webp" alt="Angelina contesting a shot in traffic against Indonesia">
+        <figcaption contenteditable="true">Fighting through contact under the basket — India vs Indonesia, 3rd place game, Bangkok.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="bkk-team-huddle.webp" alt="Team India high-fiving after the game in Bangkok">
+        <figcaption contenteditable="true">Team India after the final buzzer in Bangkok.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="bkk-team-anthem.webp" alt="Team India lined up for the national anthem in Bangkok">
+        <figcaption contenteditable="true">Team India lined up on court, FIBA U-18 Asia Cup, Bangkok.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="bkk-team-celebration.jpg" alt="Team India celebrating together off court in Bangkok">
+        <figcaption contenteditable="true">Team celebrations after the tournament, Bangkok.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="bkk-celebration-point.webp" alt="Angelina celebrating on court">
+        <figcaption contenteditable="true">Celebrating a big play on court in Bangkok.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="bkk-portrait-ball.webp" alt="Angelina official FIBA portrait holding a basketball">
+        <figcaption contenteditable="true">Official FIBA U-18 Asia Cup player portrait.</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="bkk-portrait-flex.webp" alt="Angelina official FIBA portrait flexing with a basketball">
+        <figcaption contenteditable="true">Team India, FIBA U-18 Women's Asia Cup, Bangkok 2026.</figcaption>
+      </figure>
+      <a class="gallery-item video-link" href="https://drive.google.com/file/d/1ZWIUImjJjG5NoJ8hSWG3ejxzQsI-oLX2/view?usp=sharing" target="_blank" rel="noopener">
+        <div class="video-thumb">▶ Watch Highlight Reel</div>
+        <figcaption contenteditable="true">Game highlights — click to watch on Google Drive.</figcaption>
+      </a>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="section-head"><span class="section-num">04</span><h2>Education</h2></div>
+    <div class="edu-item">
+      <div class="edu-top">
+        <span class="edu-school" contenteditable="true">Corvuss American Academy — Mumbai</span>
+        <span class="edu-years" contenteditable="true">2023 – Present</span>
+      </div>
+      <ul><li contenteditable="true">Serving as the 'School President'</li></ul>
+    </div>
+    <div class="edu-item">
+      <div class="edu-top">
+        <span class="edu-school" contenteditable="true">Atomic Energy Central School 2 — Kalpakkam</span>
+        <span class="edu-years" contenteditable="true">2014 – 2023</span>
+      </div>
+      <ul>
+        <li contenteditable="true">Served as the 'School Sports Vice Captain'</li>
+        <li contenteditable="true">Participated and won many inter- and intra-school-level art competitions</li>
+        <li contenteditable="true">Participated and won many inter- and intra-school and regional-level athletic meets</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="languages-refs">
+    <div class="section-head"><span class="section-num">05</span><h2>Languages &amp; References</h2></div>
+    <div class="two-col">
+      <ul class="lang-list">
+        <li><span contenteditable="true">English</span><span class="level" contenteditable="true">Fluent</span></li>
+        <li><span contenteditable="true">Hindi</span><span class="level" contenteditable="true">Fluent</span></li>
+        <li><span contenteditable="true">Tamil</span><span class="level" contenteditable="true">Fluent</span></li>
+        <li><span contenteditable="true">Malayalam</span><span class="level" contenteditable="true">Native</span></li>
+        <li><span contenteditable="true">French</span><span class="level" contenteditable="true">Basic</span></li>
+      </ul>
+      <div class="ref-card">
+        <span class="who" contenteditable="true">Coach Andre Godfrey</span>
+        <span class="role" contenteditable="true">Basketball Coach</span>
+        <div class="contact">
+          <div contenteditable="true">+91 9834808447</div>
+          <div contenteditable="true">+1 6463222653</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div contenteditable="true">Prepared for undergraduate admissions &amp; athletic scholarship review.</div>
+  <div style="margin-top:10px;">
+    <a href="https://angelwj77.github.io/angelina-application/" style="color:var(--court-maroon); text-decoration:none; border-bottom:1px dotted var(--court-maroon);" contenteditable="true">angelwj77.github.io/angelina-application</a>
+  </div>
+</footer>
+
+<script>
+  let editable = true;
+  function toggleEdit(){
+    editable = !editable;
+    document.body.classList.toggle('edit-on', editable);
+    document.querySelectorAll('[contenteditable]').forEach(el => {
+      el.setAttribute('contenteditable', editable ? 'true' : 'false');
+    });
+  }
+  function downloadCopy(){
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+    const toolbar = clone.querySelector('.toolbar');
+    if(toolbar) toolbar.remove();
+    const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+    const blob = new Blob([html], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'angelina-george-application.html';
+    a.click();
+  }
+</script>
+
+</body>
+</html>
